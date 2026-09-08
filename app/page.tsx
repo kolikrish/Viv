@@ -7,6 +7,7 @@ import Footer from "@/components/Footer";
 import Text from "@/components/Text";
 import Hero from "@/components/Hero";
 import News from "@/components/News";
+import OrkenCanvasGeometry from "@/components/OrkenCanvasGeometry";
 
 interface ImageItem {
   id: number;
@@ -420,7 +421,7 @@ export default function Home() {
       />
 
       {/* Main Pinterest Masonry Layout with Interactive Hover Parallax */}
-      <main data-scroll data-scroll-speed="-0.1" className="flex-1 pb-16 w-full">
+      <main data-scroll data-scroll-speed="-0.1" className="flex-1 pb-16 w-full mt-30">
         <div
           className="w-[126vw] sm:w-[120vw] md:w-[118vw] lg:w-[115vw] -ml-[13vw] sm:-ml-[10vw] md:-ml-[9vw] lg:-ml-[7.5vw] transform-gpu will-change-transform"
           style={{ transform: `translate3d(${panX}px, 0, 0)` }}
@@ -527,6 +528,7 @@ export default function Home() {
         </div>
       )}
 
+      <OrkenCanvasGeometry />
       <Text />
       <News />
 

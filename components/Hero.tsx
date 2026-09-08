@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useEffect, useRef } from "react";
-import Image from "next/image";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -52,6 +51,7 @@ const Hero: React.FC<HeroProps> = ({ selectedArtist, setSelectedArtist }) => {
 
     const handleResize = () => {
       Object.assign(state, getValues());
+      ScrollTrigger.refresh();
     };
 
     window.addEventListener("resize", handleResize);
@@ -62,11 +62,11 @@ const Hero: React.FC<HeroProps> = ({ selectedArtist, setSelectedArtist }) => {
 
     document.addEventListener("mousemove", handleMouseMove);
 
-    const trigger = ScrollTrigger.create({
+    const st = ScrollTrigger.create({
       trigger: introRef.current,
       start: "top bottom",
-      end: "top 10%",
-      scrub: true,
+      end: "top 15%",
+      scrub: 0.5,
       onUpdate: (self) => {
         state.scroll = self.progress;
         state.scale = gsap.utils.interpolate(0.25, 1, state.scroll);
@@ -90,7 +90,7 @@ const Hero: React.FC<HeroProps> = ({ selectedArtist, setSelectedArtist }) => {
           state.scroll
         );
 
-        desktopContainerRef.current.style.transform = `translateY(${currentTY}%) translateX(${state.currentX}px) scale(${state.scale})`;
+        desktopContainerRef.current.style.transform = `translate3d(${state.currentX}px, ${currentTY}%, 0) scale(${state.scale})`;
         desktopContainerRef.current.style.gap = `${state.gap}em`;
 
         if (titleP1Ref.current) {
@@ -106,20 +106,25 @@ const Hero: React.FC<HeroProps> = ({ selectedArtist, setSelectedArtist }) => {
 
     animFrameId = requestAnimationFrame(animate);
 
+    const timer = setTimeout(() => {
+      ScrollTrigger.refresh();
+    }, 150);
+
     return () => {
       window.removeEventListener("resize", handleResize);
       document.removeEventListener("mousemove", handleMouseMove);
       cancelAnimationFrame(animFrameId);
-      trigger.kill();
+      clearTimeout(timer);
+      st.kill();
     };
   }, []);
 
   return (
     <div className="w-full text-[#1a1a1a] relative">
       {/* Hero Header Section */}
-      <header className="pt-20 sm:pt-24 pb-8 px-6 sm:px-10 max-w-[1800px] w-full mx-auto flex flex-col justify-between h-[85vh] sm:h-screen relative z-0">
+      <header className="pt-20 sm:pt-24 pb-8 px-6 sm:px-10 max-w-[1800px] w-full mx-auto flex flex-col justify-between min-h-[70vh] sm:h-screen relative z-0">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
-          {/* Vucko Title / Logo */}
+          {/* Title / Logo */}
           <div className="flex-1">
             <h1 className="text-[18vw] sm:text-[15vw] md:text-[12vw] font-semibold uppercase tracking-tighter leading-none select-none">
               VUCKO
@@ -155,12 +160,12 @@ const Hero: React.FC<HeroProps> = ({ selectedArtist, setSelectedArtist }) => {
       </header>
 
       {/* Vucko Video Intro Section with ScrollTrigger Animation */}
-      <section ref={introRef} className="w-full px-6 sm:px-10 py-6 relative z-10 min-h-screen">
+      <section ref={introRef} className="w-full px-6 sm:px-10 py-6 relative z-10 min-h-screen max-w-[1800px] mx-auto">
         {/* Desktop Interactive Scalable Video Container */}
         <div
           ref={desktopContainerRef}
           className="hidden md:flex flex-col relative z-20 will-change-transform"
-          style={{ transform: "translateY(-105%) scale(0.25)", gap: "2em" }}
+          style={{ transform: "translateY(-110%) scale(0.25)", gap: "2em" }}
         >
           <div className="relative w-full aspect-video rounded-3xl bg-[#b9b9b3] overflow-hidden shadow-2xl">
             <video
@@ -208,4 +213,6 @@ const Hero: React.FC<HeroProps> = ({ selectedArtist, setSelectedArtist }) => {
 };
 
 export default Hero;
+
+
 
